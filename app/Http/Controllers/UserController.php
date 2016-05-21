@@ -100,7 +100,7 @@ class UserController extends Controller
 		$user = User::findOrFail($id);
 		$rules = array(
             'name'       => 'required',
-            'email'      => 'required|email|unique:users,email,'.$user->id,
+            'email'      => 'required|email|unique:user,email,'.$user->id,
             'password' => 'required'
         );
 		$this->validate($request, $rules);
