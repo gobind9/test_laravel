@@ -32,7 +32,7 @@
                 
           
 				 {!! Form::model($user, ['route' => ['user.destroy', $user], 'method' => 'delete', 'class' => 'form-inline'] ) !!}
-				 {{ link_to_route('user.edit', 'Edit', array($user->id), array('class' => 'btn btn-info')) }}
+				
               |
                   {!! Form::submit('delete', ['class'=>'btn btn-info btn-danger js-submit-confirm']) !!}
                 {!! Form::close()!!}

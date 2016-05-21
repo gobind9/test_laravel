@@ -13,6 +13,7 @@ use App\User;
 
 class UserController extends Controller
 {
+
 	public function index(Request $request)
    {
 		 $q = $request->get('q');
@@ -42,7 +43,7 @@ class UserController extends Controller
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
             'name'       => 'required',
-            'email'      => 'required|email|unique:users,email',
+            'email'      => 'required|email|unique:user,email',
             'password' => 'required'
         );
         $validator = Validator::make($request->all(), $rules);
