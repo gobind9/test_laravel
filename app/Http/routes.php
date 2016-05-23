@@ -52,3 +52,5 @@ Route::resource('customer', 'CustomerController');
 
 Route::resource('products', 'ProductController');
 Route::post('products/store', 'ProductController@store');
+
+Route::post('product/creditcheck', 'ProductController@creditcheck');
