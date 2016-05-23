@@ -44,7 +44,8 @@ class CustomerController extends Controller
         $rules = array(
             'name'       => 'required',
             'email'      => 'required|email|unique:user,email',
-            'password' => 'required'
+            'password' => 'required',
+			
         );
         $validator = Validator::make($request->all(), $rules);
 
