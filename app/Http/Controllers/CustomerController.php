@@ -11,12 +11,11 @@ use Illuminate\Support\Facades\Redirect;
 use View;
 use App\User;
 
-class UserController extends Controller
+class CustomerController extends Controller
 {
 
 	public function index(Request $request)
    {
-
 		 $q = $request->get('q');
         $users = User::where('name', 'LIKE', '%'.$q.'%')
             ->orWhere('name', 'LIKE', '%'.$q.'%')
@@ -31,7 +30,7 @@ class UserController extends Controller
     */
    public function create()
    {
-     return View::make('user.create');
+     return View::make('customer.create');
    }
    /**
     * Store a newly created resource in storage.
@@ -45,7 +44,8 @@ class UserController extends Controller
         $rules = array(
             'name'       => 'required',
             'email'      => 'required|email|unique:user,email',
-            'password' => 'required'
+            'password' => 'required',
+			
         );
         $validator = Validator::make($request->all(), $rules);
 
