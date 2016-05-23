@@ -16,11 +16,12 @@ class CustomerController extends Controller
 
 	public function index(Request $request)
    {
-		 $q = $request->get('q');
-        $users = User::where('name', 'LIKE', '%'.$q.'%')
-            ->orWhere('name', 'LIKE', '%'.$q.'%')
+	  
+        $customers = User::where('user_type','=','2')
             ->orderBy('name')->paginate(3);
-        return View::make('user.index', compact('users', 'q'));
+
+
+        return View::make('customer.index', compact('customers'));
 		//return View::make('user.index');
    }
    /**
@@ -45,27 +46,40 @@ class CustomerController extends Controller
             'name'       => 'required',
             'email'      => 'required|email|unique:user,email',
             'password' => 'required',
+            'address1' => 'required',
+            'city' => 'required',
+            'country' => 'required',
+            'credit_limit' => 'required'
 			
         );
         $validator = Validator::make($request->all(), $rules);
 
         // process the login
-        if ($validator->fails()) {
-            return Redirect::to('user/create')
+        if ($validator->fails())
+		{
+            return Redirect::to('customer/create')
                 ->withErrors($validator)
                 ->withInput($request->except('password'));
-        } else {
+        }
+		else
+		{
             // store
             $user = new User;
-            $user->name       = $request->get('name');
-            $user->email      = $request->get('email');
-            $user->password = $request->get('password');
+            $user->name       	= $request->get('name');
+            $user->email      	= $request->get('email');
+            $user->password   	= $request->get('password');
+            $user->address1   	= $request->get('address1');
+            $user->address2   	= $request->get('address2');
+            $user->city   	 	= $request->get('city');
+            $user->country   	= $request->get('country');
+            $user->credit_limit = $request->get('credit_limit');
+            $user->user_type   	= 2;
             $user->save();
 
             // redirect
             //Session::flash('message', 'Successfully created nerd!');
-			$request->session()->flash('alert-success', 'User was successful added!');
-            return Redirect::to('user/index');
+			$request->session()->flash('alert-success', 'Customer was successful added!');
+            return Redirect::to('customer/index');
         }
    }
    /**
@@ -102,13 +116,17 @@ class CustomerController extends Controller
 		$rules = array(
             'name'       => 'required',
             'email'      => 'required|email|unique:user,email,'.$user->id,
-            'password' => 'required'
+            'password' => 'required',
+			'address1' => 'required',
+            'city' => 'required',
+            'country' => 'required',
+            'credit_limit' => 'required'
         );
 		$this->validate($request, $rules);
         $user->update($request->all());
         //\Flash::success('User updated successfully.');
-		$request->session()->flash('alert-success', 'User was updated successfully.');
-        return redirect()->route('user.index');
+		$request->session()->flash('alert-success', 'Customer was updated successfully.');
+        return redirect()->route('customer.index');
    }
    /**
     * Remove the specified resource from storage.
@@ -119,7 +137,7 @@ class CustomerController extends Controller
    public function destroy(Request $request,$id)
    {
 		User::find($id)->delete();
-		$request->session()->flash('alert-success', 'User was deleted successfully.');
-        return redirect()->route('user.index');
+		$request->session()->flash('alert-success', 'Customer was deleted successfully.');
+        return redirect()->route('customer.index');
    }
 }

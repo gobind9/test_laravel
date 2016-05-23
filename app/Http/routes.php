@@ -45,7 +45,7 @@ Route::get('user/index', 'UserController@index');
 Route::post('user/store', 'UserController@store');
 Route::resource('user', 'UserController');
 
-Route::get('customer/index', 'UserController@index');
+Route::get('customer/index', 'CustomerController@index');
 Route::post('customer/store', 'CustomerController@store');
 Route::resource('customer', 'CustomerController');
 

@@ -65,14 +65,27 @@
                             </div>
                         </div>
 						
-						<div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Address*</label>
+						<div class="form-group{{ $errors->has('address1') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Address 1*</label>
 
                             <div class="col-md-6">
-                                <textarea class="form-control" name="address" cols="50" rows="10" id="address"></textarea>
-                                @if ($errors->has('address'))
+                                <textarea class="form-control" name="address1" cols="50" rows="10" id="address1">{{ old('address1') }}</textarea>
+                                @if ($errors->has('address1'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('address') }}</strong>
+                                        <strong>{{ $errors->first('address1') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+						
+						<div class="form-group{{ $errors->has('address2') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Address 2</label>
+
+                            <div class="col-md-6">
+                                <textarea class="form-control" name="address2" cols="50" rows="10" id="address2">{{ old('address2') }}</textarea>
+                                @if ($errors->has('address2'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('address2') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -82,7 +95,7 @@
                             <label class="col-md-4 control-label">City*</label>
 
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="city" />
+                                <input type="text" class="form-control" name="city" value="{{ old('city') }}" />
                                 @if ($errors->has('city'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('city') }}</strong>
@@ -96,6 +109,7 @@
 
                             <div class="col-md-6">
                                <select name="country" id="country" class="form-control" >
+									<option value="">Select Country</option>
 									<option value="INDIA">India</option>
 									<option value="CHINA">China</option>
 									<option value="NEPAL">Nepal</option>
@@ -105,6 +119,19 @@
                                 @if ($errors->has('country'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('country') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+						
+						<div class="form-group{{ $errors->has('credit_limit') ? ' has-error' : '' }}">
+                            <label class="col-md-4 control-label">Credit Limit*</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="credit_limit" value="{{ old('credit_limit') }}" />
+                                @if ($errors->has('credit_limit'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('credit_limit') }}</strong>
                                     </span>
                                 @endif
                             </div>

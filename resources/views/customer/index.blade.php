@@ -4,16 +4,9 @@
 <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h1>User Management </h1>
-		<a href="{{ route('user.create') }}" class="btn btn-success">Add User</a>
-        {!! Form::open(['url' => 'user', 'method'=>'get', 'class'=>'form-inline']) !!}
-            <div class="form-group {!! $errors->has('q') ? 'has-error' : '' !!}">
-              {!! Form::text('q', isset($q) ? $q : null, ['class'=>'form-control', 'placeholder' => 'Type user name...']) !!}
-              {!! $errors->first('q', '<p class="help-block">:message</p>') !!}
-            </div>
-
-          {!! Form::submit('Search', ['class'=>'btn btn-primary']) !!}
-        {!! Form::close() !!}
+        <h1>Customer Management </h1>
+		<a href="{{ route('customer.create') }}" class="btn btn-success">Add Customer</a>
+      
         <table class="table table-striped table-bordered table-hover">
           <thead>
             <tr class="bg-info">
@@ -24,16 +17,14 @@
             </tr>
           </thead>
           <tbody>
-            @foreach($users as $user)
+            @foreach($customers as $customer)
             <tr>
-              <td>{{ $user->name }}</td>
-              <td>{{ $user->email}}</td>
-              <td>{{ $user->password}}</td>
-              <td>
-                
-          
-				 {!! Form::model($user, ['route' => ['user.destroy', $user], 'method' => 'delete', 'class' => 'form-inline'] ) !!}
-				<a href="{{route('user.edit',$user->id)}}" class="btn btn-warning">Update</a>
+              <td>{{ $customer->name }}</td>
+              <td>{{ $customer->email}}</td>
+              <td>{{ $customer->password}}</td>
+              <td>          
+				 {!! Form::model($customer, ['route' => ['customer.destroy', $customer], 'method' => 'delete', 'class' => 'form-inline'] ) !!}
+				<a href="{{route('customer.edit',$customer->id)}}" class="btn btn-warning">Update</a>
               |
                   {!! Form::submit('delete', ['class'=>'btn btn-info btn-danger js-submit-confirm']) !!}
                 {!! Form::close()!!}
@@ -42,7 +33,7 @@
             @endforeach
           </tbody>
         </table>
-        {!! $users->links() !!}
+        {!! $customers->links() !!}
       </div>
     </div>
   </div>

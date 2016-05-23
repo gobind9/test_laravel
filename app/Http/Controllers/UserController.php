@@ -20,7 +20,7 @@ class UserController extends Controller
 		 $q = $request->get('q');
         $users = User::where('name', 'LIKE', '%'.$q.'%')
             ->orWhere('name', 'LIKE', '%'.$q.'%')
-            ->orderBy('name')->paginate(3);
+            ->orderBy('name')->paginate(9);
         return View::make('user.index', compact('users', 'q'));
 		//return View::make('user.index');
    }
