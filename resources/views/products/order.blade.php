@@ -4,6 +4,7 @@
  <h1>Assergis Products</h1>
 
 
+
  <hr>
  {!! Form::open(['url' => 'products/creditcheck','id'=>'orderform']) !!}
    {!! Form::submit('create Order', ['class' => 'btn btn-success']) !!}

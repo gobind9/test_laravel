@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 use Request;
 use App\Product;
 use App\Order;
+use Auth;
+use App\OrderLine;
 use App\MeasureUnit;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use View;
+use Session;
 use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
@@ -56,7 +59,8 @@ class ProductController extends Controller
         
 		   $products = Request::all();	 
 		   Product::create($products);
-		   return redirect('products');
+		   Session::flash('alert-success', 'Product added successfully!');
+			return Redirect::to('products');
 		
 	   
 	   
@@ -97,7 +101,8 @@ class ProductController extends Controller
       $productUpdate = $request::all();
 	  $product = Product::find($id);
       $product->update($productUpdate);
-	  return redirect('products');
+	  Session::flash('alert-success', 'Product updated successfully!');
+	  return Redirect::to('products');
    }
    /**
     * Remove the specified resource from storage.
@@ -108,7 +113,8 @@ class ProductController extends Controller
    public function destroy($id)
    {
       Product::find($id)->delete();
-	  return redirect('products');
+	  Session::flash('alert-success', 'Product deleted successfully!');
+	  return Redirect::to('products');
    }
    
 
@@ -136,6 +142,7 @@ class ProductController extends Controller
 	
 			if($products['qty_in_stock_'.$val] > $productArr['qty_in_stock']){
 				$available=0;
+				Session::flash('alert-warning', 'Quantity not available');
 				break;
 			}else{
 				$sum_amt = $sum_amt + ($products['qty_in_stock_'.$val] * $productArr['price_per_unit']);
@@ -144,25 +151,49 @@ class ProductController extends Controller
 			
 		if($sum_amt > $amount){
 			$amt=0;	
+			Session::flash('alert-warning', 'Insufficient amount');
 		}
 		
 		//insert into order table
 		$order_total = $tax + $sum_amt;		
 		$orders = array('id_user'=>$id_user,'id_customer'=>$id_user,'total_cost'=>$sum_amt,'tax'=>$tax,'order_total'=>$order_total);
 		
-		Order::create($orders);
-		$id_order = 10;
+		$orderData= Order::create($orders);
+		$id_order = $orderData->id;
 		//INSERT into order_line table
 		if($amt ==1 && $available == 1){
 			foreach($products['pid'] as $val){
-				$order_line = array('id_order'=>$products['pid'],'id_product'=>$id_user,'qty'=>$products['qty_in_stock_'.$val,'sale_price_per_unit'=>$tax)
+				$productArr	= Product::find($val)->toArray();
+				$order_line = array(
+				'id_order'=>$id_order,
+				'id_product'=>$val,
+				'qty'=>$products['qty_in_stock_'.$val],
+				'sale_price_per_unit'=>$productArr['price_per_unit']
+				);
+				OrderLine::create($order_line);
+				//reduce quantity from product table
+				$qty_in_stock = $productArr['qty_in_stock'] - $products['qty_in_stock_'.$val];
+				
+				$products_update = array('qty_in_stock'=>$qty_in_stock);
+				$product = Product::find($val);
+				$product->update($products_update);
 			}
+			Session::flash('alert-success', 'Order has been done successfully!');
 		}
 		
-		//reduce quantity from product table
+		return Redirect::to('products/order');
+		
 		//$request->session()->flash('alert-success', 'Order has been done successfully!');
 		//return Redirect::to('products/order');
-		return redirect('products/order');
+		//return redirect('products/order');
+		
+		
+		
+/*Session::flash('alert-warning', 'warning');
+Session::flash('alert-success', 'success');
+Session::flash('alert-info', 'info');*/
+		
+		
 		//if($pid && $uid){
 			
 			
