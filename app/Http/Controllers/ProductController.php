@@ -85,4 +85,18 @@ class ProductController extends Controller
       Product::find($id)->delete();
 	  return redirect('products');
    }
+   
+   /**
+    * ajax request to get credit info
+    */
+	public function creditcheck(Request $request, $id){
+		$pid = Input::get('pid');
+        $uid = Input::get('uid');
+        	
+		if($pid && $uid){
+			$productArr	= Product::find($uid);
+			$userArr	= User::find($pid);
+			return response()->json($productArr);
+		}	
+   	}
 }
