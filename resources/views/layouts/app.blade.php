@@ -50,12 +50,16 @@
 				@if (Auth::guest())
 					<li><a href="{{ url('/') }}">Home</a></li>
 				@else	
+					@if(Auth::user()->user_type == 0)				
                     <li><a href="{{ url('/') }}">Home</a></li>
-                    <li><a href="{{ url('/user') }}">Users</a></li>
-                    <li><a href="{{ url('/customer') }}">Customers</a></li>
+                    <!--<li><a href="{{ url('/user') }}">Users</a></li>-->                    
+					<li><a href="{{ url('/customer') }}">Customers</a></li>
 					<li><a href="{{ url('/products') }}">Products</a></li>
+					<li><a href="{{ url('/order') }}">Orders</a></li>
+					@else
+					<li><a href="{{ url('/') }}">Home</a></li>	
                     <li><a href="{{ url('/products/order') }}">Cart Details</a></li>
-                    <li><a href="{{ url('/order') }}">Orders</a></li>
+					@endif
 				@endif	
                 </ul>
 
