@@ -6,14 +6,7 @@
       <div class="col-md-12">
         <h1>User Management </h1>
 		<a href="{{ route('user.create') }}" class="btn btn-success">Add User</a>
-        {!! Form::open(['url' => 'user', 'method'=>'get', 'class'=>'form-inline']) !!}
-            <div class="form-group {!! $errors->has('q') ? 'has-error' : '' !!}">
-              {!! Form::text('q', isset($q) ? $q : null, ['class'=>'form-control', 'placeholder' => 'Type user name...']) !!}
-              {!! $errors->first('q', '<p class="help-block">:message</p>') !!}
-            </div>
 
-          {!! Form::submit('Search', ['class'=>'btn btn-primary']) !!}
-        {!! Form::close() !!}
         <table class="table table-striped table-bordered table-hover">
           <thead>
             <tr class="bg-info">

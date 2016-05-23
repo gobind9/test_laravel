@@ -17,9 +17,16 @@ class UserController extends Controller
 	public function index(Request $request)
    {
 
-		 $q = $request->get('q');
-        $users = User::where('name', 'LIKE', '%'.$q.'%')
-            ->orWhere('name', 'LIKE', '%'.$q.'%')
+		$q = $request->get('q');
+        $users = User::where('user_type', '=',0)
+		//->where('name', 'LIKE', '%'.$q.'%' or 'name', 'LIKE', '%'.$q.'%')
+		//->orWhere('$q',function ($query) {
+             //   $query->where('name', 'LIKE', '%'.$q.'%')
+             //         ->orWhere('name', 'LIKE', '%'.$q.'%');
+           // })
+           
+			//->Orwhere('name', 'LIKE', '%'.$q.'%')
+			// ->where('user_type', '=',0)
             ->orderBy('name')->paginate(9);
         return View::make('user.index', compact('users', 'q'));
 		//return View::make('user.index');
@@ -45,7 +52,8 @@ class UserController extends Controller
         $rules = array(
             'name'       => 'required',
             'email'      => 'required|email|unique:user,email',
-            'password' => 'required'
+			'password' => 'required|confirmed',
+            'password_confirmation' => 'required'
         );
         $validator = Validator::make($request->all(), $rules);
 
@@ -59,7 +67,8 @@ class UserController extends Controller
             $user = new User;
             $user->name       = $request->get('name');
             $user->email      = $request->get('email');
-            $user->password = $request->get('password');
+            $user->password = bcrypt($request->get('password'));
+            $user->user_type = 0;
             $user->save();
 
             // redirect

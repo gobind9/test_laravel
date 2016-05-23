@@ -17,7 +17,7 @@ class CustomerController extends Controller
 	public function index(Request $request)
    {
 	  
-        $customers = User::where('user_type','=','2')
+        $customers = User::where('user_type','=','1')
             ->orderBy('name')->paginate(3);
 
 
@@ -45,7 +45,8 @@ class CustomerController extends Controller
         $rules = array(
             'name'       => 'required',
             'email'      => 'required|email|unique:user,email',
-            'password' => 'required',
+			'password' => 'required|confirmed',
+            'password_confirmation' => 'required',
             'address1' => 'required',
             'city' => 'required',
             'country' => 'required',
@@ -67,13 +68,13 @@ class CustomerController extends Controller
             $user = new User;
             $user->name       	= $request->get('name');
             $user->email      	= $request->get('email');
-            $user->password   	= $request->get('password');
+            $user->password   	= bcrypt($request->get('password'));
             $user->address1   	= $request->get('address1');
             $user->address2   	= $request->get('address2');
             $user->city   	 	= $request->get('city');
             $user->country   	= $request->get('country');
             $user->credit_limit = $request->get('credit_limit');
-            $user->user_type   	= 2;
+            $user->user_type   	= 1;
             $user->save();
 
             // redirect
@@ -102,7 +103,7 @@ class CustomerController extends Controller
    public function edit($id)
    {
        $user = User::findOrFail($id);
-        return view('user.edit', compact('user'));
+       return view('customer.edit', compact('user'));
    }
    /**
     * Update the specified resource in storage.
@@ -122,7 +123,9 @@ class CustomerController extends Controller
             'country' => 'required',
             'credit_limit' => 'required'
         );
+		
 		$this->validate($request, $rules);
+		
         $user->update($request->all());
         //\Flash::success('User updated successfully.');
 		$request->session()->flash('alert-success', 'Customer was updated successfully.');
