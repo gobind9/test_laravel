@@ -11,6 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Route::resource('products', 'ProductController');
+Route::post('products/store', 'ProductController@store');
+
+
