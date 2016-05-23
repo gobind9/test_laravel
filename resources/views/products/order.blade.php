@@ -5,7 +5,7 @@
 
 
  <hr>
- {!! Form::open(['url' => 'products/saveorder']) !!}
+ {!! Form::open(['url' => 'products/creditcheck','id'=>'orderform']) !!}
    {!! Form::submit('create Order', ['class' => 'btn btn-success']) !!}
    
  <table class="table table-striped table-bordered table-hover">
@@ -27,7 +27,7 @@
              <td>{{ $product->name }}</td>
              <td>{{ $measure_units[$product->id_uom] }}</td>
              <td>{{ $product->price_per_unit }}</td>
-             <td>{!! Form::text('qty_in_stock',null,['class'=>'form-control']) !!}</td> 
+             <td>{!! Form::text('qty_in_stock_'.$product->id,null,['class'=>'form-control']) !!}</td> 
          </tr>
      @endforeach
 

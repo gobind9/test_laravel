@@ -3,10 +3,12 @@ namespace App\Http\Controllers;
 
 use Request;
 use App\Product;
+use App\Order;
 use App\MeasureUnit;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
+use View;
 use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
@@ -111,7 +113,7 @@ class ProductController extends Controller
    
 
    public function order(){
-		 //$products = DB::table('user')->select('user.id','user.name','profile.photo')->join('profile','profile.id','=','user.id')->where('something','=','something')->where('oherthing','=','otherthing')->get();
+		
 	   $products = Product::all();
 	   $measure_units = MeasureUnit::lists('name', 'id');
 	   $measure_units = $measure_units->toArray();
@@ -121,15 +123,53 @@ class ProductController extends Controller
    /**
     * ajax request to get credit info
     */
-	public function creditcheck(Request $request, $id){
-		$pid = Input::get('pid');
-        $uid = Input::get('uid');
-        	
-		if($pid && $uid){
-			$productArr	= Product::find($uid);
-			$userArr	= User::find($pid);
-			return response()->json($productArr);
-		}	
+	public function creditcheck(Request $request){
+		$products = Request::all();	 
+		$available = 1;
+		$amt=1;
+		$amount	= 1000;
+		$sum_amt= 0;
+		$id_user = Auth::user()->id;
+		$tax = 0;
+        foreach($products['pid'] as $val){
+			$productArr	= Product::find($val)->toArray();
+	
+			if($products['qty_in_stock_'.$val] > $productArr['qty_in_stock']){
+				$available=0;
+				break;
+			}else{
+				$sum_amt = $sum_amt + ($products['qty_in_stock_'.$val] * $productArr['price_per_unit']);
+			}
+		}
+			
+		if($sum_amt > $amount){
+			$amt=0;	
+		}
+		
+		//insert into order table
+		$order_total = $tax + $sum_amt;		
+		$orders = array('id_user'=>$id_user,'id_customer'=>$id_user,'total_cost'=>$sum_amt,'tax'=>$tax,'order_total'=>$order_total);
+		
+		Order::create($orders);
+		$id_order = 10;
+		//INSERT into order_line table
+		if($amt ==1 && $available == 1){
+			foreach($products['pid'] as $val){
+				$order_line = array('id_order'=>$products['pid'],'id_product'=>$id_user,'qty'=>$products['qty_in_stock_'.$val,'sale_price_per_unit'=>$tax)
+			}
+		}
+		
+		//reduce quantity from product table
+		//$request->session()->flash('alert-success', 'Order has been done successfully!');
+		//return Redirect::to('products/order');
+		return redirect('products/order');
+		//if($pid && $uid){
+			
+			
+			//if()
+			//$userArr	= User::find($pid);
+			//return response()->json($productArr);
+		//}	
    	}
 
 }
