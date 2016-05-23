@@ -8,7 +8,7 @@
 				<div class="panel-heading">Home</div>
 				<div class="panel-body">
 					@if (Auth::guest())
-
+						Please login!
 					@else
 						You are logged in!!!!!
 					@endif
