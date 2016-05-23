@@ -3,8 +3,10 @@ namespace App\Http\Controllers;
 
 use Request;
 use App\Order;
+use App\User;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use DB;
 
 class OrderController extends Controller
 {
@@ -15,12 +17,13 @@ class OrderController extends Controller
     */
    public function index()
    {
-      $orders = Order::leftJoin('customer', function($join) {
-      $join->on('order.customer_id', '=', 'customer.id')->all();
-    });
-	echo "<pre>";
-	print_r($orders);
-	die;
+	   
+	 $orders = DB::table('order')
+        ->leftJoin('user', 'user.id', '=', 'order.id_customer')
+        ->leftJoin('order_line', 'order_line.id_order', '=', 'order.id')
+        ->leftJoin('products', 'products.id', '=', 'order_line.id_product',array('name1'=>'name'))
+		->select('products.name as productName','user.name','order_line.qty','order_line.sale_price_per_unit')
+        ->get();
       return view('orders.index',compact('orders'));
    }
 
