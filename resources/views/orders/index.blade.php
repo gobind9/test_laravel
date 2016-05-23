@@ -8,22 +8,19 @@
         <table class="table table-striped table-bordered table-hover">
           <thead>
             <tr class="bg-info">
-              <th>Name</th>
-              <th>Email</th>
-              <th>Password</th>
-              <td>Action</td>
+              <th>Customer Name</th>
+              <th>Product</th>
+              <th>Qnty</th>
+              <td>Price</td>
             </tr>
           </thead>
           <tbody>
             @foreach($orders as $order)
             <tr>
-              <td>{{ $order->id }}</td>
-              <td>{{ $order->id_user}}</td>
-              <td></td>
-              <td>
-
-				<a href="{{route('order.edit',$order->id)}}" class="btn btn-warning">Update</a>
-             
+              <td>{{ $order->name }}</td>
+              <td>{{ $order->productName}}</td>
+              <td>{{ $order->qty}}</td>
+              <td>{{ $order->qty*$order->sale_price_per_unit}}
               </td>
             </tr>
             @endforeach

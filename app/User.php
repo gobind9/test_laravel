@@ -35,4 +35,9 @@ class User extends Authenticatable
 	
 	
 	public $timestamps = false;
+	
+	 public function Order()
+    {
+        return $this->hasMany('App/Order');
+    }
 }
