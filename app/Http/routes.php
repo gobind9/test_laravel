@@ -41,8 +41,12 @@ Route::post('password/reset', 'Auth\PasswordController@postReset');
 
 //Route::get('/', array('as'=>'articles','uses'=>'ArticleController@Index'));//another way, route for controller
 
-Route::resource('user', 'UserController');
+Route::get('user/index', 'UserController@index');
 Route::post('user/store', 'UserController@store');
+Route::resource('user', 'UserController');
+
+Route::resource('customer', 'CustomerController');
+Route::post('customer/store', 'CustomerController@store');
 
 Route::resource('products', 'ProductController');
 Route::post('products/store', 'ProductController@store');
