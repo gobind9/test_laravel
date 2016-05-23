@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Request;
 use App\Product;
 use App\Order;
+use App\User;
 use Auth;
 use App\OrderLine;
 use App\MeasureUnit;
@@ -133,53 +134,63 @@ class ProductController extends Controller
 		$products = Request::all();	 
 		$available = 1;
 		$amt=1;
-		$amount	= 1000;
+		
 		$sum_amt= 0;
 		$id_user = Auth::user()->id;
 		$tax = 0;
-        foreach($products['pid'] as $val){
-			$productArr	= Product::find($val)->toArray();
-	
-			if($products['qty_in_stock_'.$val] > $productArr['qty_in_stock']){
-				$available=0;
-				Session::flash('alert-warning', 'Quantity not available');
-				break;
-			}else{
-				$sum_amt = $sum_amt + ($products['qty_in_stock_'.$val] * $productArr['price_per_unit']);
-			}
-		}
+		
+		
+		
+		if(count($products) > 0 && isset($products['pid'])){
+			$userArr	= User::find($id_user)->toArray();
+			$amount	= $userArr['credit_limit'];
 			
-		if($sum_amt > $amount){
-			$amt=0;	
-			Session::flash('alert-warning', 'Insufficient amount');
-		}
-		
-		//insert into order table
-		$order_total = $tax + $sum_amt;		
-		$orders = array('id_user'=>$id_user,'id_customer'=>$id_user,'total_cost'=>$sum_amt,'tax'=>$tax,'order_total'=>$order_total);
-		
-		$orderData= Order::create($orders);
-		$id_order = $orderData->id;
-		//INSERT into order_line table
-		if($amt ==1 && $available == 1){
 			foreach($products['pid'] as $val){
 				$productArr	= Product::find($val)->toArray();
-				$order_line = array(
-				'id_order'=>$id_order,
-				'id_product'=>$val,
-				'qty'=>$products['qty_in_stock_'.$val],
-				'sale_price_per_unit'=>$productArr['price_per_unit']
-				);
-				OrderLine::create($order_line);
-				//reduce quantity from product table
-				$qty_in_stock = $productArr['qty_in_stock'] - $products['qty_in_stock_'.$val];
-				
-				$products_update = array('qty_in_stock'=>$qty_in_stock);
-				$product = Product::find($val);
-				$product->update($products_update);
+		
+				if($products['qty_in_stock_'.$val] > $productArr['qty_in_stock']){
+					$available=0;
+					Session::flash('alert-warning', 'Quantity not available');
+					break;
+				}else{
+					$sum_amt = $sum_amt + ($products['qty_in_stock_'.$val] * $productArr['price_per_unit']);
+				}
 			}
-			Session::flash('alert-success', 'Order has been done successfully!');
-		}
+				
+			if($sum_amt > $amount){
+				$amt=0;	
+				Session::flash('alert-warning', 'Insufficient amount');
+			}
+			
+			//insert into order table
+			$order_total = $tax + $sum_amt;		
+			$orders = array('id_user'=>$id_user,'id_customer'=>$id_user,'total_cost'=>$sum_amt,'tax'=>$tax,'order_total'=>$order_total);
+			
+			$orderData= Order::create($orders);
+			$id_order = $orderData->id;
+			//INSERT into order_line table
+			if($amt ==1 && $available == 1){
+				foreach($products['pid'] as $val){
+					$productArr	= Product::find($val)->toArray();
+					$order_line = array(
+					'id_order'=>$id_order,
+					'id_product'=>$val,
+					'qty'=>$products['qty_in_stock_'.$val],
+					'sale_price_per_unit'=>$productArr['price_per_unit']
+					);
+					OrderLine::create($order_line);
+					//reduce quantity from product table
+					$qty_in_stock = $productArr['qty_in_stock'] - $products['qty_in_stock_'.$val];
+					
+					$products_update = array('qty_in_stock'=>$qty_in_stock);
+					$product = Product::find($val);
+					$product->update($products_update);
+				}
+				Session::flash('alert-success', 'Order has been done successfully!');
+			}
+		}else{
+			Session::flash('alert-warning', 'Invalid request');
+		}	
 		
 		return Redirect::to('products/order');
 		
