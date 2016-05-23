@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Request;
 use App\Product;
+use App\MeasureUnit;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -25,7 +26,12 @@ class ProductController extends Controller
     */
    public function create()
    {
-     return view('products.create');
+     //$measure_units = MeasureUnit::all(['id', 'name']);
+	 $measure_units = MeasureUnit::lists('name', 'id');
+	 $measure_units = $measure_units->toArray();
+	
+	
+	  return view('products.create',compact('measure_units'));
    }
    /**
     * Store a newly created resource in storage.
@@ -37,6 +43,7 @@ class ProductController extends Controller
        $products = Request::all();
 	  // echo "<pre>";print_r($products);exit;
 	   Product::create($products);
+	   
 	   return redirect('products');
    }
    /**
@@ -59,7 +66,10 @@ class ProductController extends Controller
   public function edit($id)
 	{
 	   $products = Product::findOrFail($id);
-	   return view('products.edit',compact('products'));
+	   $measure_units = MeasureUnit::lists('name', 'id');
+	   $measure_units = $measure_units->toArray();
+	   return view('products.edit',compact(['products', 'measure_units']));
+	   
 	}
    /**
     * Update the specified resource in storage.
