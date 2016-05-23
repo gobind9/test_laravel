@@ -5,10 +5,10 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Edit User ({!!$user->name!!})</div>
+                <div class="panel-heading">Edit Customer ({!!$user->name!!})</div>
                 <div class="panel-body">
                   <!--  /*<form class="form-horizontal" role="form" method="POST" action="{{ url('/user/store') }}">*/--->
-					 {!! Form::model($user, ['route' => ['user.update', $user], 'method' =>'patch','class'=>'form-horizontal'])!!}
+					 {!! Form::model($user, ['route' => ['customer.update', $user], 'method' =>'patch','class'=>'form-horizontal'])!!}
                         {!! csrf_field() !!}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -54,11 +54,85 @@
                                 @endif
                             </div>
                         </div>
+						
+						<div class="form-group{{ $errors->has('address1') ? ' has-error' : '' }}">
+							{!! Form::label('address1', 'Address 1', ['class' => 'col-md-4 control-label']) !!}
+
+                            <div class="col-md-6">
+                                {!! Form::textarea('address1',null,['class'=>'form-control', 'rows' => 2, 'cols' => 40]) !!}
+
+                                @if ($errors->has('address1'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('address1') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+						
+						<div class="form-group{{ $errors->has('address2') ? ' has-error' : '' }}">
+							{!! Form::label('address2', 'Address 2', ['class' => 'col-md-4 control-label']) !!}
+
+                            <div class="col-md-6">
+                               {!! Form::textarea('address2',null,['class'=>'form-control', 'rows' => 2, 'cols' => 40]) !!}
+
+                                @if ($errors->has('address2'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('address2') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+						
+						<div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
+							{!! Form::label('city', 'City', ['class' => 'col-md-4 control-label']) !!}
+
+                            <div class="col-md-6">
+                                {!! Form::text('city', null, array('required', 'class'=>'form-control')) !!}
+
+                                @if ($errors->has('city'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('city') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+						
+						
+						<div class="form-group{{ $errors->has('country') ? ' has-error' : '' }}">
+							{!! Form::label('country', 'Country', ['class' => 'col-md-4 control-label']) !!}
+
+                            <div class="col-md-6">
+                         
+								{!! Form::select('country', array(''=>'Select Country','INDIA'=>'India','CHINA'=>'China','NEPAL'=>'Nepal','USA'=>'USA','UK'=>'UK'),null, array('required','class' => 'form-control')) !!}
+
+                                @if ($errors->has('country'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('country') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+						
+						<div class="form-group{{ $errors->has('credit_limit') ? ' has-error' : '' }}">
+							{!! Form::label('credit_limit', 'Credit Limit', ['class' => 'col-md-4 control-label']) !!}
+
+                            <div class="col-md-6">
+                                {!! Form::text('credit_limit', null, array('required', 'class'=>'form-control')) !!}
+
+                                @if ($errors->has('credit_limit'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('credit_limit') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+						
+						
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-user"></i>Edit User
+                                    <i class="fa fa-btn fa-user"></i>Edit Customer
                                 </button>
                             </div>
                         </div>

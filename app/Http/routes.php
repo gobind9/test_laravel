@@ -54,5 +54,11 @@ Route::resource('products', 'ProductController');
 Route::post('products/store', 'ProductController@store');
 
 
+
 Route::post('products/creditcheck', 'ProductController@creditcheck');
+
+
+
+Route::get('order/index', 'OrderController@index');
+Route::resource('order', 'OrderController');
 

@@ -110,11 +110,11 @@
                             <div class="col-md-6">
                                <select name="country" id="country" class="form-control" >
 									<option value="">Select Country</option>
-									<option value="INDIA">India</option>
-									<option value="CHINA">China</option>
-									<option value="NEPAL">Nepal</option>
-									<option value="USA">USA</option>
-									<option value="UK">UK</option>
+									<option value="INDIA" {{ old('country') == 'INDIA' ? 'selected' : '' }}>India</option>
+									<option value="CHINA" {{ old('country') == 'CHINA' ? 'selected' : '' }}>China</option>
+									<option value="NEPAL" {{ old('country') == 'NEPAL' ? 'selected' : '' }}>Nepal</option>
+									<option value="USA" {{ old('country') == 'USA' ? 'selected' : '' }}>USA</option>
+									<option value="UK" {{ old('country') == 'UK' ? 'selected' : '' }}>UK</option>
 							   </select>
                                 @if ($errors->has('country'))
                                     <span class="help-block">
