@@ -109,6 +109,7 @@ class ProductController extends Controller
 	  return redirect('products');
    }
    
+
    public function order(){
 		 //$products = DB::table('user')->select('user.id','user.name','profile.photo')->join('profile','profile.id','=','user.id')->where('something','=','something')->where('oherthing','=','otherthing')->get();
 	   $products = Product::all();
@@ -116,4 +117,19 @@ class ProductController extends Controller
 	   $measure_units = $measure_units->toArray();
 	   return view('products.order',compact(['products', 'measure_units']));
    }
+
+   /**
+    * ajax request to get credit info
+    */
+	public function creditcheck(Request $request, $id){
+		$pid = Input::get('pid');
+        $uid = Input::get('uid');
+        	
+		if($pid && $uid){
+			$productArr	= Product::find($uid);
+			$userArr	= User::find($pid);
+			return response()->json($productArr);
+		}	
+   	}
+
 }
