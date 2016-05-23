@@ -11,7 +11,6 @@
 |
 */
 
-<<<<<<< HEAD
 Route::get('/', function () {
     //dd( Auth::user());
     return view('home');
