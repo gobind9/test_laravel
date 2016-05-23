@@ -49,5 +49,6 @@ Route::get('customer/index', 'CustomerController@index');
 Route::post('customer/store', 'CustomerController@store');
 Route::resource('customer', 'CustomerController');
 
+Route::get('products/order', 'ProductController@order');
 Route::resource('products', 'ProductController');
 Route::post('products/store', 'ProductController@store');

@@ -5,6 +5,8 @@ use Request;
 use App\Product;
 use App\MeasureUnit;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
@@ -38,13 +40,24 @@ class ProductController extends Controller
     *
     * @return Response
     */
-   public function store()
+   public function store(Request $request)
    {
-       $products = Request::all();
-	  // echo "<pre>";print_r($products);exit;
-	   Product::create($products);
+       
+	   // validate
+        // read more on validation at http://laravel.com/docs/validation
+			$rules = array(
+				'name'       => 'required',
+				'id_uom'      => 'required',
+				'price_per_unit' => 'required',
+				'qty_in_stock' => 'required'
+			);
+        
+		   $products = Request::all();	 
+		   Product::create($products);
+		   return redirect('products');
+		
 	   
-	   return redirect('products');
+	   
    }
    /**
     * Display the specified resource.
@@ -94,5 +107,13 @@ class ProductController extends Controller
    {
       Product::find($id)->delete();
 	  return redirect('products');
+   }
+   
+   public function order(){
+		 //$products = DB::table('user')->select('user.id','user.name','profile.photo')->join('profile','profile.id','=','user.id')->where('something','=','something')->where('oherthing','=','otherthing')->get();
+	   $products = Product::all();
+	   $measure_units = MeasureUnit::lists('name', 'id');
+	   $measure_units = $measure_units->toArray();
+	   return view('products.order',compact(['products', 'measure_units']));
    }
 }
