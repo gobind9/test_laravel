@@ -11,6 +11,7 @@
 |
 */
 
+<<<<<<< HEAD
 Route::get('/', function () {
     //dd( Auth::user());
     return view('home');
@@ -44,3 +45,10 @@ Route::post('password/reset', 'Auth\PasswordController@postReset');
 Route::resource('user', 'UserController');
 Route::post('user/store', 'UserController@store');
 
+=======
+
+Route::resource('products', 'ProductController');
+Route::post('products/store', 'ProductController@store');
+
+
+>>>>>>> development
