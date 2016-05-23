@@ -41,12 +41,6 @@ Route::post('password/reset', 'Auth\PasswordController@postReset');
 
 //Route::get('/', array('as'=>'articles','uses'=>'ArticleController@Index'));//another way, route for controller
 
-<<<<<<< HEAD
-
-Route::resource('user/index', 'UserController@index');
-Route::post('user/store', 'UserController@store');
-Route::resource('user', 'UserController');
-=======
 Route::get('user/index', 'UserController@index');
 Route::post('user/store', 'UserController@store');
 Route::resource('user', 'UserController');
@@ -54,8 +48,6 @@ Route::resource('user', 'UserController');
 Route::get('customer/index', 'UserController@index');
 Route::post('customer/store', 'CustomerController@store');
 Route::resource('customer', 'CustomerController');
-
->>>>>>> 21fdf77361195e08305baa2a61aa9d0bf3aa55fd
 
 Route::resource('products', 'ProductController');
 Route::post('products/store', 'ProductController@store');
