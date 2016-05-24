@@ -20,7 +20,7 @@
          <tr>
              <!--<td>{{ $product->id }}</td>-->
              <td>{{ $product->name }}</td>
-             <td>{{ $product->id_uom }}</td>
+              <td>{{ $measure_units[$product->id_uom] }}</td>
              <td>{{ $product->price_per_unit }}</td>
              <td>{{ $product->qty_in_stock }}</td>
              
@@ -39,4 +39,5 @@
      </tbody>
 
  </table>
+ {!! $products->links() !!}
 @endsection
