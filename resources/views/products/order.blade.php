@@ -24,14 +24,20 @@
 
      @foreach ($products as $product)
          <tr>
-            <td> {{ Form::checkbox('pid[]', $product->id) }}</td>
+            <td> {{ Form::checkbox('pid[]', $product->id, null, ['id'=>'pid_'.$product->id]) }}</td>
              <td>{{ $product->name }}</td>
              <td>{{ $measure_units[$product->id_uom] }}</td>
-             <td>{{ $product->price_per_unit }}</td>
-             <td>{!! Form::text('qty_in_stock_'.$product->id,null,['class'=>'form-control']) !!}</td> 
+             <td id="qty_{{ $product->id }}">{{ $product->price_per_unit }}</td>
+             <td>{!! Form::text('qty_in_stock_'.$product->id,1,['class'=>'form-control','id'=>$product->id]) !!}</td> 
          </tr>
      @endforeach
-
+		<tr class="bg-info">
+        	<td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td><strong>Total</strong></td>
+            <td id="totalamt"></td>
+            <td>&nbsp;</td> 
+         </tr>
      </tbody>
 
  </table>
