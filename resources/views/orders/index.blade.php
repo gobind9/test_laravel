@@ -32,6 +32,7 @@
               <th>Product</th>
               <th>Qnty</th>
               <td>Price</td>
+              <td>OrderDate</td>
             </tr>
           </thead>
           <tbody>
@@ -41,6 +42,8 @@
               <td>{{ $order->productName}}</td>
               <td>{{ $order->qty}}</td>
               <td>{{ $order->qty*$order->sale_price_per_unit}}
+              </td>
+			  <td>{{ $order->order_date}}
               </td>
             </tr>
             @endforeach

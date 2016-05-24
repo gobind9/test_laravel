@@ -53,8 +53,9 @@ class OrderController extends Controller
 			$query->where('user.id', '=', $cust);
 		}
 		})
-		->select('products.name as productName','user.name','order_line.qty','order_line.sale_price_per_unit')
-		->paginate(1);
+		->groupBy(['order_line.id_product','order.id'])
+		->select('products.name as productName','user.name','order_line.qty','order_line.sale_price_per_unit', 'order.order_date')
+		->paginate(10);
 		
 		
       return view('orders.index',compact('orders','customers','q','toDate','fromDate','cust'));
