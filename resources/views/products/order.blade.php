@@ -6,9 +6,9 @@
 
 
  <hr>
- {!! Form::open(['url' => 'products/creditcheck','id'=>'orderform']) !!}
-   {!! Form::submit('create Order', ['class' => 'btn btn-success']) !!}
-   
+{!! Form::open(['url' => 'products/creditcheck','id'=>'orderform']) !!}
+<div style="float: left">{!! Form::submit('create Order', ['class' => 'btn btn-success']) !!}</div>
+<div style="float: right; padding:0 20px 0 0">My credits: {{$credit_limit}}</div>
  <table class="table table-striped table-bordered table-hover">
      <thead>
      <tr class="bg-info">
