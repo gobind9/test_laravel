@@ -27,8 +27,10 @@
             <td> {{ Form::checkbox('pid[]', $product->id, null, ['id'=>'pid_'.$product->id]) }}</td>
              <td>{{ $product->name }}</td>
              <td>{{ $measure_units[$product->id_uom] }}</td>
+
              <td id="qty_{{ $product->id }}">{{ $product->price_per_unit }}</td>
-             <td>{!! Form::text('qty_in_stock_'.$product->id,1,['class'=>'form-control','id'=>$product->id]) !!}</td> 
+             <td>{!! Form::text('qty_in_stock_'.$product->id,1,['class'=>'form-control','style'=>'width:40px;','id'=>$product->id]) !!}</td> 
+
          </tr>
      @endforeach
 		<tr class="bg-info">
@@ -41,5 +43,6 @@
      </tbody>
 
  </table>
+  {!! $products->links() !!}
  {!! Form::close() !!}
 @endsection
