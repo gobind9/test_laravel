@@ -13,6 +13,7 @@ use Auth;
 
 use App\Http\Requests;
 
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use View;
@@ -64,7 +65,7 @@ class ProductController extends Controller
 			if ($validator->fails())
 			{
 				return Redirect::to('products/create')
-					->withErrors($validator);
+					->withErrors($validator)->withInput();
 			}else{
 				$products = Request::all();	 
 				Product::create($products);
@@ -119,7 +120,7 @@ class ProductController extends Controller
 		if ($validator->fails())
 		{	
 			return Redirect::to('products/'.$id.'/edit')
-					->withErrors($validator);
+					->withErrors($validator)->withInput();
 		}else{
 			$product->update($productUpdate);
 			Session::flash('alert-success', 'Product updated successfully!');
