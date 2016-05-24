@@ -53,12 +53,20 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
+				@if (Auth::guest())
+					<li><a href="{{ url('/') }}">Home</a></li>
+				@else	
+					@if(Auth::user()->user_type == 0)				
                     <li><a href="{{ url('/') }}">Home</a></li>
-                    <li><a href="{{ url('/user') }}">Users</a></li>
-                    <li><a href="{{ url('/customer') }}">Customers</a></li>
+                    <!--<li><a href="{{ url('/user') }}">Users</a></li>-->                    
+					<li><a href="{{ url('/customer') }}">Customers</a></li>
 					<li><a href="{{ url('/products') }}">Products</a></li>
+					<li><a href="{{ url('/order') }}">Orders</a></li>
+					@else
+					<li><a href="{{ url('/') }}">Home</a></li>	
                     <li><a href="{{ url('/products/order') }}">Cart Details</a></li>
-                    <li><a href="{{ url('/order') }}">Orders</a></li>
+					@endif
+				@endif	
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -66,7 +74,7 @@
                     <!-- Authentication Links -->
                     @if (Auth::guest())
                         <li><a href="{{ url('/auth/login') }}">Login</a></li>
-                        <li><a href="{{ url('/customer/create') }}">Register</a></li>
+                       
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

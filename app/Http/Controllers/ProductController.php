@@ -3,7 +3,16 @@ namespace App\Http\Controllers;
 
 use Request;
 use App\Product;
+use App\Order;
+use App\User;
+use Auth;
+use App\OrderLine;
+use App\MeasureUnit;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
+use View;
+use Session;
 use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
@@ -25,19 +34,37 @@ class ProductController extends Controller
     */
    public function create()
    {
-     return view('products.create');
+     //$measure_units = MeasureUnit::all(['id', 'name']);
+	 $measure_units = MeasureUnit::lists('name', 'id');
+	 $measure_units = $measure_units->toArray();
+	
+	
+	  return view('products.create',compact('measure_units'));
    }
    /**
     * Store a newly created resource in storage.
     *
     * @return Response
     */
-   public function store()
+   public function store(Request $request)
    {
-       $products = Request::all();
-	  // echo "<pre>";print_r($products);exit;
-	   Product::create($products);
-	   return redirect('products');
+       
+	   // validate
+        // read more on validation at http://laravel.com/docs/validation
+			$rules = array(
+				'name'       => 'required',
+				'id_uom'      => 'required',
+				'price_per_unit' => 'required',
+				'qty_in_stock' => 'required'
+			);
+        
+		   $products = Request::all();	 
+		   Product::create($products);
+		   Session::flash('alert-success', 'Product added successfully!');
+			return Redirect::to('products');
+		
+	   
+	   
    }
    /**
     * Display the specified resource.
@@ -59,7 +86,10 @@ class ProductController extends Controller
   public function edit($id)
 	{
 	   $products = Product::findOrFail($id);
-	   return view('products.edit',compact('products'));
+	   $measure_units = MeasureUnit::lists('name', 'id');
+	   $measure_units = $measure_units->toArray();
+	   return view('products.edit',compact(['products', 'measure_units']));
+	   
 	}
    /**
     * Update the specified resource in storage.
@@ -72,7 +102,8 @@ class ProductController extends Controller
       $productUpdate = $request::all();
 	  $product = Product::find($id);
       $product->update($productUpdate);
-	  return redirect('products');
+	  Session::flash('alert-success', 'Product updated successfully!');
+	  return Redirect::to('products');
    }
    /**
     * Remove the specified resource from storage.
@@ -83,20 +114,108 @@ class ProductController extends Controller
    public function destroy($id)
    {
       Product::find($id)->delete();
-	  return redirect('products');
+	  Session::flash('alert-success', 'Product deleted successfully!');
+	  return Redirect::to('products');
    }
    
+
+   public function order(){
+   		$id_user = Auth::user()->id;
+		$userArr		= User::find($id_user)->toArray();	
+		$credit_limit 	= $userArr['credit_limit'];
+		
+		//product details
+	  	$products = Product::all();
+	   	$measure_units = MeasureUnit::lists('name', 'id');
+	   	$measure_units = $measure_units->toArray();
+	   	return view('products.order',compact(['products', 'measure_units', 'credit_limit']));
+   }
+
    /**
     * ajax request to get credit info
     */
-	public function creditcheck(Request $request, $id){
-		$pid = Input::get('pid');
-        $uid = Input::get('uid');
-        	
-		if($pid && $uid){
-			$productArr	= Product::find($uid);
-			$userArr	= User::find($pid);
-			return response()->json($productArr);
+	public function creditcheck(Request $request){
+		$products = Request::all();	 
+		$available = 1;
+		$amt=1;
+		
+		$sum_amt= 0;
+		$id_user = Auth::user()->id;
+		$tax = 0;
+		
+		
+		
+		if(count($products) > 0 && isset($products['pid'])){
+			$userArr	= User::find($id_user)->toArray();
+			$amount	= $userArr['credit_limit'];
+			
+			foreach($products['pid'] as $val){
+				$productArr	= Product::find($val)->toArray();
+		
+				if($products['qty_in_stock_'.$val] > $productArr['qty_in_stock']){
+					$available=0;
+					Session::flash('alert-warning', 'Quantity not available');
+					break;
+				}else{
+					$sum_amt = $sum_amt + ($products['qty_in_stock_'.$val] * $productArr['price_per_unit']);
+				}
+			}
+				
+			if($sum_amt > $amount){
+				$amt=0;	
+				Session::flash('alert-warning', 'Insufficient amount');
+			}
+			
+			//insert into order table
+			$order_total = $tax + $sum_amt;		
+			$orders = array('id_user'=>$id_user,'id_customer'=>$id_user,'total_cost'=>$sum_amt,'tax'=>$tax,'order_total'=>$order_total);
+			
+			$orderData= Order::create($orders);
+			$id_order = $orderData->id;
+			//INSERT into order_line table
+			if($amt ==1 && $available == 1){
+				foreach($products['pid'] as $val){
+					$productArr	= Product::find($val)->toArray();
+					$order_line = array(
+					'id_order'=>$id_order,
+					'id_product'=>$val,
+					'qty'=>$products['qty_in_stock_'.$val],
+					'sale_price_per_unit'=>$productArr['price_per_unit']
+					);
+					OrderLine::create($order_line);
+					//reduce quantity from product table
+					$qty_in_stock = $productArr['qty_in_stock'] - $products['qty_in_stock_'.$val];
+					
+					$products_update = array('qty_in_stock'=>$qty_in_stock);
+					$product = Product::find($val);
+					$product->update($products_update);
+				}
+				Session::flash('alert-success', 'Order has been done successfully!');
+			}
+		}else{
+			Session::flash('alert-warning', 'Invalid request');
 		}	
+		
+		return Redirect::to('products/order');
+		
+		//$request->session()->flash('alert-success', 'Order has been done successfully!');
+		//return Redirect::to('products/order');
+		//return redirect('products/order');
+		
+		
+		
+/*Session::flash('alert-warning', 'warning');
+Session::flash('alert-success', 'success');
+Session::flash('alert-info', 'info');*/
+		
+		
+		//if($pid && $uid){
+			
+			
+			//if()
+			//$userArr	= User::find($pid);
+			//return response()->json($productArr);
+		//}	
    	}
+
 }

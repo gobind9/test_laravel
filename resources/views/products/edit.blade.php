@@ -13,7 +13,7 @@
 					</div>
 					<div class="form-group">
 						{!! Form::label('Unit of Measure', 'Unit of Measure:') !!}
-						{!! Form::text('id_uom',null,['class'=>'form-control']) !!}
+						{!! Form::select('id_uom', $measure_units, null, ['class' => 'form-control']) !!}
 					</div>
 					<div class="form-group">
 						{!! Form::label('Price', 'Price:') !!}
