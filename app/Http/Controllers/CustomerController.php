@@ -50,10 +50,11 @@ class CustomerController extends Controller
             'address1' => 'required',
             'city' => 'required',
             'country' => 'required',
-            'credit_limit' => 'required'
+			 'credit_limit' => array('required', 'regex:/^\d*(\.\d{2})?$/')
 			
         );
-        $validator = Validator::make($request->all(), $rules);
+		$msg = array('integer'=>"Only number value are allowed.");
+        $validator = Validator::make($request->all(), $rules,$msg);
 
         // process the login
         if ($validator->fails())
@@ -121,8 +122,9 @@ class CustomerController extends Controller
 			'address1' => 'required',
             'city' => 'required',
             'country' => 'required',
-            'credit_limit' => 'required'
+            'credit_limit' => array('required', 'regex:/^\d*(\.\d{2})?$/')
         );
+		
 		
 		$this->validate($request, $rules);
 		
