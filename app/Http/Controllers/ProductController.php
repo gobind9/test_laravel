@@ -199,14 +199,16 @@ class ProductController extends Controller
 				return Redirect::to('products/order');
 			}
 			
-			//insert into order table
-			$order_total = $tax + $sum_amt;		
-			$orders = array('id_user'=>$id_user,'id_customer'=>$id_user,'total_cost'=>$sum_amt,'tax'=>$tax,'order_total'=>$order_total);
 			
-			$orderData= Order::create($orders);
-			$id_order = $orderData->id;
 			//INSERT into order_line table
 			if($amt ==1 && $available == 1){
+				//insert into order table
+				$order_total = $tax + $sum_amt;		
+				$orders = array('id_user'=>$id_user,'id_customer'=>$id_user,'total_cost'=>$sum_amt,'tax'=>$tax,'order_total'=>$order_total);
+				
+				$orderData= Order::create($orders);
+				$id_order = $orderData->id;
+			
 				foreach($products['pid'] as $val){
 					$productArr	= Product::find($val)->toArray();
 					$order_line = array(
