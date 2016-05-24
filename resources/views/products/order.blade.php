@@ -28,12 +28,13 @@
              <td>{{ $product->name }}</td>
              <td>{{ $measure_units[$product->id_uom] }}</td>
              <td>{{ $product->price_per_unit }}</td>
-             <td>{!! Form::text('qty_in_stock_'.$product->id,null,['class'=>'form-control']) !!}</td> 
+             <td>{!! Form::text('qty_in_stock_'.$product->id,null,['class'=>'']) !!}</td> 
          </tr>
      @endforeach
 
      </tbody>
 
  </table>
+  {!! $products->links() !!}
  {!! Form::close() !!}
 @endsection
