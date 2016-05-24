@@ -142,11 +142,15 @@ class ProductController extends Controller
    
 
    public function order(){
-		
+   		$id_user = Auth::user()->id;
+		$userArr		= User::find($id_user)->toArray();	
+		$credit_limit 	= $userArr['credit_limit'];		
+
 	   $products = Product::paginate(10); 
 	   $measure_units = MeasureUnit::lists('name', 'id');
 	   $measure_units = $measure_units->toArray();
-	   return view('products.order',compact(['products', 'measure_units']));
+	  	return view('products.order',compact(['products', 'measure_units', 'credit_limit']));
+		
    }
 
    /**
