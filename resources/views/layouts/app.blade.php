@@ -66,7 +66,7 @@
 					<li><a href="{{ url('/') }}">Home</a></li>	
 					<li><a href="{{ url('/products') }}">Products</a></li>
                     <li><a href="{{ url('/customer/customerorder') }}">Orders</a></li>
-                    <li><a href="{{ url('/products/createorder') }}">New Order</a></li>
+                    <li><a href="{{ url('/products/order') }}">New Order</a></li>
 					@endif
 				@endif	
                 </ul>
