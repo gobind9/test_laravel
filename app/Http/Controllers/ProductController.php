@@ -30,9 +30,18 @@ class ProductController extends Controller
     *
     * @return Response
     */
+   public function __construct(){		
+		$this->middleware('auth');
+	  
+	}
+	
    public function index()
    {
-       $products = Product::paginate(10);     
+       //login check
+	   if(empty(Auth::check())){
+		   return Redirect::to('/');
+	   }
+	   $products = Product::paginate(10);     
 	   $measure_units = MeasureUnit::lists('name', 'id');
 	   $measure_units = $measure_units->toArray();
 	   return view('products.index',compact(['products', 'measure_units']));
@@ -44,6 +53,11 @@ class ProductController extends Controller
     */
    public function create()
    {     
+	 //login check
+	   if(empty(Auth::check())){
+		   return Redirect::to('/');
+	   }
+	   
 	 $measure_units = MeasureUnit::lists('name', 'id');
 	 $measure_units = $measure_units->toArray();	
 	 return view('products.create',compact('measure_units'));
@@ -94,6 +108,10 @@ class ProductController extends Controller
     */
   public function edit($id)
 	{
+	   //login check
+	   if(empty(Auth::check())){
+		   return Redirect::to('/');
+	   }
 	   $products = Product::findOrFail($id);
 	   $measure_units = MeasureUnit::lists('name', 'id');
 	   $measure_units = $measure_units->toArray();
@@ -144,6 +162,10 @@ class ProductController extends Controller
    
 
    public function order(){
+		//login check
+	   if(empty(Auth::check())){
+		   return Redirect::to('/');
+	   }
 		$id_user 		= Auth::user()->id;
 		$userArr		= User::find($id_user)->toArray();	
 		$credit_limit 	= $userArr['credit_limit'];		
@@ -235,12 +257,20 @@ class ProductController extends Controller
 
 	
 	public function addtocart() {
+			//login check
+		   if(empty(Auth::check())){
+			   return Redirect::to('/');
+		   }
 			$products = Product::paginate(10);     
 			$measure_units = MeasureUnit::lists('name', 'id');
 			$measure_units = $measure_units->toArray();
 			return view('products.addtocart',compact(['products', 'measure_units']));
 	}
-	public function addcart(Request $request){		
+	public function addcart(Request $request){
+		//login check
+	   if(empty(Auth::check())){
+		   return Redirect::to('/');
+	   }
 		$products = Request::all();
 		$customer_id = Auth::user()->id;
 		$pid = $products['pid'];

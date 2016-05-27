@@ -7,7 +7,7 @@ use App\User;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
-
+use Auth;
 use DB;
 
 class OrderController extends Controller
@@ -17,9 +17,16 @@ class OrderController extends Controller
     *
     * @return Response
     */
+   public function __construct(){		
+		$this->middleware('auth');
+	  
+	}
    public function index(Request $request)
    {
 	   
+		if(empty(Auth::check())){
+		   return Redirect::to('/');
+	   }
 		$fromDate = $request->get('from');  
 		$id = $request->get('id');  
 		$toDate = $request->get('to'); 
@@ -57,6 +64,9 @@ class OrderController extends Controller
    
    public function orderdetails(Request $request)
    {
+		if(empty(Auth::check())){
+		   return Redirect::to('/');
+	   }
 		$id = $request->get('id');
 		$orderLists = DB::table('order')
         ->Leftjoin('order_line', 'order.id', '=', 'order_line.id_order')

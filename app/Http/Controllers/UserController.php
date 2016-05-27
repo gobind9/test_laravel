@@ -11,12 +11,22 @@ use Illuminate\Support\Facades\Redirect;
 use View;
 use App\User;
 
+use Auth;
+
 class UserController extends Controller
 {
 
+	public function __construct(){		
+		$this->middleware('auth');
+	  
+	}
+	
+	
+	
 	public function index(Request $request)
    {
 
+		
 		$q = $request->get('q');
         $users = User::where('user_type', '=',0)
 		//->where('name', 'LIKE', '%'.$q.'%' or 'name', 'LIKE', '%'.$q.'%')
@@ -38,6 +48,9 @@ class UserController extends Controller
     */
    public function create()
    {
+	 if(empty(Auth::check())){
+		   return Redirect::to('/');
+	   }
      return View::make('user.create');
    }
    /**
@@ -96,7 +109,10 @@ class UserController extends Controller
     */
    public function edit($id)
    {
-       $user = User::findOrFail($id);
+       if(empty(Auth::check())){
+		   return Redirect::to('/');
+	   }
+	   $user = User::findOrFail($id);
         return view('user.edit', compact('user'));
    }
    /**

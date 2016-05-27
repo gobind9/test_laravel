@@ -11,13 +11,22 @@ use Illuminate\Support\Facades\Redirect;
 use View;
 use App\User;
 use App\Order;
+use Auth;
 use DB;
+
 
 class CustomerController extends Controller
 {
 
+	public function __construct(){		
+		$this->middleware('auth');
+	  
+	}
 	public function index(Request $request)
    {
+	   if(empty(Auth::check())){
+		   return Redirect::to('/');
+	   }
 		$fromDate = $request->get('from');  
 		$toDate = $request->get('to'); 
 		// $customers = DB::table('user')->select('id', 'name','email','city','credit_limit')->where('user_type','=','1')->lists('name','id'); 
@@ -56,6 +65,9 @@ class CustomerController extends Controller
     */
    public function create()
    {
+	  if(empty(Auth::check())){
+		   return Redirect::to('/');
+	   }
      return View::make('customer.create');
    }
    /**
@@ -128,6 +140,9 @@ class CustomerController extends Controller
     */
    public function edit($id)
    {
+	   if(empty(Auth::check())){
+		   return Redirect::to('/');
+	   }
        $user = User::findOrFail($id);
        return view('customer.edit', compact('user'));
    }
