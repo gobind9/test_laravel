@@ -246,9 +246,6 @@ class ProductController extends Controller
    	}
    	
 	public function deletecartAction(){
-		//$authData = User::find($id_user)->toArray();
-   		//$orderLineTable = $this->getServiceLocator()->get('OrderLineTable');
-		//$orderLineTable->deleteData(array('id_customer'=>$authData['id'], 'id_order'=>0));
 		
    		DB::table('order_line')->where('id_customer', '=', Auth::user()->id)->delete();
 		Session::flash('alert-success', 'Deleted successfully.');

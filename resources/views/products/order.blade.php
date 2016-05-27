@@ -47,7 +47,7 @@
      
     @else
     	<tr class="bg-info">
-        	<td colspan="6" align="center">You do no have any item in your cart!!</td> 
+        	<td colspan="6" align="center">You do not have any item in your cart!!</td> 
          </tr>
          </tbody>
 	@endif
