@@ -20,7 +20,6 @@ class CustomerController extends Controller
    {
 		$fromDate = $request->get('from');  
 		$toDate = $request->get('to'); 
-		$cust = $request->get('customer');
 		// $customers = DB::table('user')->select('id', 'name','email','city','credit_limit')->where('user_type','=','1')->lists('name','id'); 
 		$datas = DB::table('user')
 		->leftJoin('order', 'user.id', '=', 'order.id_customer')
@@ -45,7 +44,7 @@ class CustomerController extends Controller
 		})
 		->groupBy('user.id')
 		->select('user.name','user.email','user.city','user.credit_limit', 'user.id',DB::raw('count(order.id) as totalOrder'),DB::raw('sum(order_total) as totalAmount'))
-		->paginate(1);
+		->paginate(10);
 	
 		
 		return view('customer.index',compact('datas'));

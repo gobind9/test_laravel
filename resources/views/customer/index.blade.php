@@ -14,7 +14,7 @@
               <th>Email</th>
               <th>City</th>
               <th>Number of orders</th>
-              <th>Total ordered amount</th>
+              <th>Total Ordered Amount</th>
               <td>Action</td>
             </tr>
           </thead>
@@ -26,7 +26,7 @@
 				<td>{{ $data->email }}</td>
 				<td>{{ $data->city }}</td>
 				<td>{{ $data->totalOrder }}</td>
-				<td>{{ $data->totalAmount }}</td>
+				<td>{{ (float)$data->totalAmount }}</td>
              
               <td>          
 				 {!! Form::model($data, ['route' => ['customer.destroy', $datas ], 'method' => 'delete', 'class' => 'form-inline'] ) !!}
