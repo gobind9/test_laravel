@@ -21,6 +21,8 @@ use View;
 use Session;
 use App\Http\Controllers\Controller;
 
+use DB;
+
 class ProductController extends Controller
 {
     /**
@@ -236,5 +238,56 @@ class ProductController extends Controller
 		
 		
    	}
+	
+	public function addtocart() {
+			$products = Product::paginate(10);     
+			$measure_units = MeasureUnit::lists('name', 'id');
+			$measure_units = $measure_units->toArray();
+			return view('products.addtocart',compact(['products', 'measure_units']));
+	}
+	public function addcart(Request $request){		
+		$products = Request::all();
+		$customer_id = Auth::user()->id;
+		$pid = $products['pid'];
+		//fetch product detail
+		if(!empty($pid)){			
+			$productDetail = Product::find($pid)->toArray();
+		}
+		
+		
+			
+			
+		 $addcartstatusArray = DB::table('order_line')
+			->where(function($query) use ($customer_id, $pid){
+				if($customer_id!=''){
+					$query->where('order_line.id_customer', '=', $customer_id);
+				}
+				if($pid!=''){
+					$query->where('order_line.id_product', '=', $pid);
+				}				
+				$query->where('order_line.id_order', '=', '0');
+				
+			})
+			->lists('qty');
+			
+			$newqty = 1;
+			
+			if(!empty($addcartstatusArray)){				
+				//update data in cart
+				$qty = $addcartstatusArray[0];
+				$newqty = $qty + 1;				
+				DB::table('order_line')
+				->where('id_product', $pid)
+				->where('id_customer', $customer_id)
+				->update(['qty' => $newqty]);
+			}else{				
+				//insert cart data
+				$productData = array();					
+				$productData = array('id_product'=>$pid,'qty'=>1,'sale_price_per_unit'=>$productDetail['price_per_unit'],'id_customer'=>$customer_id,'id_order' => 0);				
+				OrderLine::create($productData);
+			}
+		echo "1";
+		
+	}
 
 }

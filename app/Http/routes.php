@@ -50,12 +50,14 @@ Route::post('customer/store', 'CustomerController@store');
 Route::resource('customer', 'CustomerController');
 
 Route::get('products/order', 'ProductController@order');
+Route::get('products/addtocart', 'ProductController@addtocart');
 Route::resource('products', 'ProductController');
 Route::post('products/store', 'ProductController@store');
 
 
 
 Route::post('products/creditcheck', 'ProductController@creditcheck');
+Route::post('products/addcart', 'ProductController@addcart');
 
 
 
