@@ -33,7 +33,8 @@
 
              <td id="qty_{{ $product->id }}">{{ $product->price_per_unit }}</td>
              <td>{!! Form::text('qty_in_stock_'.$product->pid, $product->qty, ['class'=>'form-control', 'style'=>'width:40px;', 'id'=>$product->pid]) !!}</td> 
-         	 <td>{!! Form::button('Delete', ['class' => 'btn btn-danger']) !!}</td>
+         	 <td>{!! Form::button('Delete', ['class' => 'btn btn-danger',
+			 'onclick'=>"window.location.href='/products/deletefromcard/?id=".$product->id."'"])!!}</td>
          </tr>
      @endforeach
 		<tr class="bg-info">
@@ -41,7 +42,7 @@
             <td>&nbsp;</td>
             <td><strong>Total</strong></td>
             <td id="totalamt"></td>
-            <td align="right">{!! Form::button('Delete', ['class' => 'btn btn-danger']) !!}</td>
+            <td align="right">{!! Form::button('Delete', ['class' => 'btn btn-danger','onclick'=>"window.location.href='/products/deletecart'"]) !!}</td>
             <td><div style="float: left">{!! Form::submit('Save Order', ['class' => 'btn btn-success']) !!}</div></td> 
          </tr>
      
