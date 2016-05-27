@@ -50,6 +50,8 @@ Route::post('customer/store', 'CustomerController@store');
 Route::resource('customer', 'CustomerController');
 
 Route::get('products/order', 'ProductController@order');
+Route::get('products/deletefromcard', 'ProductController@deletefromcard');//for deleting item from cart
+Route::get('products/deletecart', 'ProductController@deletecart');//for deleting cart
 Route::get('products/addtocart', 'ProductController@addtocart');
 Route::resource('products', 'ProductController');
 Route::post('products/store', 'ProductController@store');

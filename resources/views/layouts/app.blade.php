@@ -64,7 +64,11 @@
 					<li><a href="{{ url('/order/index') }}">Orders</a></li>
 					@elseif(Auth::user()->user_type == 1)
 					<li><a href="{{ url('/') }}">Home</a></li>	
+<<<<<<< HEAD
 					<li><a href="{{ url('/products') }}">Products</a></li>
+=======
+					<li><a href="{{ url('/products/addtocart') }}">Products</a></li>
+>>>>>>> 0ea66a1d05612ab206e234609ea268c2363490ca
                     <li><a href="{{ url('/order/index') }}">Orders</a></li>
                     <li><a href="{{ url('/products/order') }}">New Order</a></li>
 					@endif

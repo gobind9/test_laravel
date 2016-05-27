@@ -286,7 +286,7 @@ class ProductController extends Controller
 	}
 
    	
-	public function deletefromcardAction(){
+	public function deletefromcard(){
 		$requestData 	= Request::all();	
    		$id 			= $requestData['id'];
    		if(isset($id)){
@@ -301,7 +301,7 @@ class ProductController extends Controller
    		return Redirect::to('products/order');
    	}
    	
-	public function deletecartAction(){
+	public function deletecart(){
 		
    		DB::table('order_line')->where('id_customer', '=', Auth::user()->id)->delete();
 		Session::flash('alert-success', 'Deleted successfully.');
