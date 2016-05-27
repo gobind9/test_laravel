@@ -60,5 +60,7 @@ Route::post('products/creditcheck', 'ProductController@creditcheck');
 
 
 Route::get('order/index', 'OrderController@index');
+Route::get('order/orderdetails', 'OrderController@orderdetails');
+Route::get('order/deleteorder', 'OrderController@deleteorder');
 Route::resource('order', 'OrderController');
 

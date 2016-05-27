@@ -20,19 +20,14 @@
           </thead>
           <tbody>
 		  
-            @foreach($datas as $data)
+            @foreach($customers as $customer)
             <tr>
-				<td>{{ $data->name }}</td>
-				<td>{{ $data->email }}</td>
-				<td>{{ $data->city }}</td>
-				<td>{{ $data->totalOrder }}</td>
-				<td>{{ $data->totalAmount }}</td>
+              <td>{{ $customer->name }}ggggggg</td>
              
               <td>          
-				 {!! Form::model($data, ['route' => ['customer.destroy', $datas ], 'method' => 'delete', 'class' => 'form-inline'] ) !!}
-				<a href="{{route('order.index','id='.$data->id)}}" class="btn btn-warning">List Orders</a>
-				<a href="{{route('customer.edit',$data->id)}}" class="btn btn-warning">Update</a>
-				|
+				 {!! Form::model($customer, ['route' => ['customer.destroy', $customer], 'method' => 'delete', 'class' => 'form-inline'] ) !!}
+				
+              |
                   {!! Form::submit('delete', ['class'=>'btn btn-info btn-danger js-submit-confirm']) !!}
                 {!! Form::close()!!}
               </td>
@@ -40,7 +35,7 @@
             @endforeach
           </tbody>
         </table>
-		{!! $datas->links() !!}
+
       </div>
     </div>
   </div>
