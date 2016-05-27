@@ -17,7 +17,7 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use View;
-
+use DB;
 use Session;
 use App\Http\Controllers\Controller;
 
@@ -134,8 +134,7 @@ class ProductController extends Controller
     * @param  int  $id
     * @return Response
     */
-   public function destroy($id)
-   {
+   public function destroy($id){
       Product::find($id)->delete();
 	  Session::flash('alert-success', 'Product deleted successfully!');
 	  return Redirect::to('products');
@@ -143,15 +142,17 @@ class ProductController extends Controller
    
 
    public function order(){
-   		$id_user = Auth::user()->id;
+		$id_user 		= Auth::user()->id;
 		$userArr		= User::find($id_user)->toArray();	
 		$credit_limit 	= $userArr['credit_limit'];		
 
-	   $products = Product::paginate(10); 
-	   $measure_units = MeasureUnit::lists('name', 'id');
-	   $measure_units = $measure_units->toArray();
-	  	return view('products.order',compact(['products', 'measure_units', 'credit_limit']));
-		
+		$orderLine = new OrderLine();
+	   	$products = $orderLine->getCart($id_user); 
+		//echo "<pre>";
+	    //print_r($products);
+	   	$measure_units = MeasureUnit::lists('name', 'id');
+	   	$measure_units = $measure_units->toArray();
+	   	return view('products.order',compact(['products', 'measure_units', 'credit_limit']));	
    }
 
    /**
@@ -159,22 +160,19 @@ class ProductController extends Controller
     */
 	public function creditcheck(Request $request){
 		$products = Request::all();	
-		
-		
-		$available = 1;
-		$amt=1;
-		
-		$sum_amt= 0;
-		$sum_qty = 0;
-		$id_user = Auth::user()->id;
-		$tax = 0;
-		
-		
+		//echo "<pre>";
+		//print_r($products);die;
+		$available 	= 1;
+		$amt		= 1;
+		$sum_amt	= 0;
+		$sum_qty 	= 0;
+		$id_user 	= Auth::user()->id;
+		$tax 		= 0;
 		
 		if(count($products) > 0 && isset($products['pid'])){
 			
 			$userArr	= User::find($id_user)->toArray();
-			$amount	= $userArr['credit_limit'];
+			$amount		= $userArr['credit_limit'];
 			
 			foreach($products['pid'] as $val){
 				$productArr	= Product::find($val)->toArray();
@@ -200,30 +198,29 @@ class ProductController extends Controller
 				return Redirect::to('products/order');
 			}
 			
-			
 			//INSERT into order_line table
 			if($amt ==1 && $available == 1){
 				//insert into order table
-				$order_total = $tax + $sum_amt;		
-				$orders = array('id_user'=>$id_user,'id_customer'=>$id_user,'total_cost'=>$sum_amt,'tax'=>$tax,'order_total'=>$order_total);
+				$order_total 	= $tax + $sum_amt;		
+				$orders 		= array('id_user'=>$id_user,'id_customer'=>$id_user,'total_cost'=>$sum_amt,'tax'=>$tax,'order_total'=>$order_total);
 				
-				$orderData= Order::create($orders);
-				$id_order = $orderData->id;
+				$orderData	= Order::create($orders);
+				$id_order 	= $orderData->id;
+				
+				//update order line table
+				DB::table('order_line')->whereIn('id', $products['orderline'])->update(array('id_order' => $id_order));
+				
+				//update user credits
+				$amount = $amount - $sum_amt;
+				DB::table('user')->where('id', $id_user)->update(array('credit_limit' => $amount));
 			
 				foreach($products['pid'] as $val){
-					$productArr	= Product::find($val)->toArray();
-					$order_line = array(
-					'id_order'=>$id_order,
-					'id_product'=>$val,
-					'qty'=>$products['qty_in_stock_'.$val],
-					'sale_price_per_unit'=>$productArr['price_per_unit']
-					);
-					OrderLine::create($order_line);
-					//reduce quantity from product table
-					$qty_in_stock = $productArr['qty_in_stock'] - $products['qty_in_stock_'.$val];
+					$productArr		= Product::find($val)->toArray();					
 					
-					$products_update = array('qty_in_stock'=>$qty_in_stock);
-					$product = Product::find($val);
+					//reduce quantity from product table
+					$qty_in_stock 		= $productArr['qty_in_stock'] - $products['qty_in_stock_'.$val];
+					$products_update 	= array('qty_in_stock'=>$qty_in_stock);
+					$product 			= Product::find($val);
 					$product->update($products_update);
 				}
 				Session::flash('alert-success', 'Order has been done successfully!');
@@ -231,10 +228,30 @@ class ProductController extends Controller
 		}else{
 			Session::flash('alert-warning', 'Invalid request');
 		}	
-		
 		return Redirect::to('products/order');
-		
-		
    	}
+   	
+	public function deletefromcardAction(){
+		$requestData 	= Request::all();	
+   		$id 			= $requestData['id'];
+   		if(isset($id)){
+   			DB::table('order_line')->where('id', '=', $id)->delete();
+			Session::flash('alert-success', 'Deleted successfully.');
+			
+   		}else{
+   			Session::flash('alert-warning', 'Invalid product.');
+   		}
 
+   		return Redirect::to('products/order');
+   	}
+   	
+	public function deletecartAction(){
+		//$authData = User::find($id_user)->toArray();
+   		//$orderLineTable = $this->getServiceLocator()->get('OrderLineTable');
+		//$orderLineTable->deleteData(array('id_customer'=>$authData['id'], 'id_order'=>0));
+		
+   		DB::table('order_line')->where('id_customer', '=', Auth::user()->id)->delete();
+		Session::flash('alert-success', 'Deleted successfully.');
+   		return Redirect::to('products/order');
+   	}
 }
