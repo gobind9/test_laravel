@@ -16,6 +16,7 @@ function calculateSum(){
 		var price   = $('#qty_' + pid).text();
 		
 	    v = parseFloat(value);
+	    
 	   	if (!isNaN(v)){
 	   		//if($('#pid_' + pid).is(':checked')){
 	   			total = total + (v*price);
