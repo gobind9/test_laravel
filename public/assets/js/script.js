@@ -17,9 +17,9 @@ function calculateSum(){
 		
 	    v = parseFloat(value);
 	   	if (!isNaN(v)){
-	   		if($('#pid_' + pid).is(':checked')){
+	   		//if($('#pid_' + pid).is(':checked')){
 	   			total = total + (v*price);
-	   		}
+	   		//}
 	    }	  
 	})
 	$('#totalamt').html('<strong>'+total+'</strong>');
