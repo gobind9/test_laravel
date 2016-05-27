@@ -17,7 +17,7 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use View;
-use DB;
+
 use Session;
 use App\Http\Controllers\Controller;
 
@@ -217,7 +217,7 @@ class ProductController extends Controller
 				DB::table('user')->where('id', $id_user)->update(array('credit_limit' => $amount));
 			
 				foreach($products['pid'] as $val){
-					$productArr		= Product::find($val)->toArray();					
+					$productArr		= Product::find($val)->toArray();
 					
 					//reduce quantity from product table
 					$qty_in_stock 		= $productArr['qty_in_stock'] - $products['qty_in_stock_'.$val];
