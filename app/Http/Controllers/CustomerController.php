@@ -10,19 +10,45 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use View;
 use App\User;
+use App\Order;
+use DB;
 
 class CustomerController extends Controller
 {
 
 	public function index(Request $request)
    {
-	  
-        $customers = User::where('user_type','=','1')
-            ->orderBy('name')->paginate(3);
+		$fromDate = $request->get('from');  
+		$toDate = $request->get('to'); 
+		$cust = $request->get('customer');
+		// $customers = DB::table('user')->select('id', 'name','email','city','credit_limit')->where('user_type','=','1')->lists('name','id'); 
+		$datas = DB::table('user')
+		->leftJoin('order', 'user.id', '=', 'order.id_customer')
+		->where(function($query) use ($fromDate, $toDate){
+			
+		$query->where('user.user_type', '=', '1');
+			
 
-
-        return View::make('customer.index', compact('customers'));
-		//return View::make('user.index');
+		if($fromDate!='' && $toDate==''){
+			$query->where('order.order_date', '>=', $fromDate);
+			
+		}
+		if($fromDate=='' && $toDate!=''){
+			$query->where('order.order_date', '<=', $toDate);
+			
+		}
+		if($fromDate!='' && $toDate!=''){
+			$query->where('order.order_date', '>=', $fromDate);
+			$query->where('order.order_date', '<=', $toDate);
+		}
+		
+		})
+		->groupBy('user.id')
+		->select('user.name','user.email','user.city','user.credit_limit', 'user.id',DB::raw('count(order.id) as totalOrder'),DB::raw('sum(order_total) as totalAmount'))
+		->paginate(1);
+	
+		
+		return view('customer.index',compact('datas'));
    }
    /**
     * Show the form for creating a new resource.

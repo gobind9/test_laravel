@@ -28,6 +28,8 @@ class UserController extends Controller
 			//->Orwhere('name', 'LIKE', '%'.$q.'%')
 			// ->where('user_type', '=',0)
             ->orderBy('name')->paginate(9);
+			echo "<pre>";
+			print_r($users);
         return View::make('user.index', compact('users', 'q'));
 		//return View::make('user.index');
    }
