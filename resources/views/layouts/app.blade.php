@@ -61,11 +61,11 @@
                     <li><a href="{{ url('/user') }}">Users</a></li>                    
 					<li><a href="{{ url('/customer') }}">Customers</a></li>
 					<li><a href="{{ url('/products') }}">Products</a></li>
-					<li><a href="{{ url('/order') }}">Orders</a></li>
+					<li><a href="{{ url('/order/index') }}">Orders</a></li>
 					@elseif(Auth::user()->user_type == 1)
 					<li><a href="{{ url('/') }}">Home</a></li>	
 					<li><a href="{{ url('/products') }}">Products</a></li>
-                    <li><a href="{{ url('/customer/customerorder') }}">Orders</a></li>
+                    <li><a href="{{ url('/order/index') }}">Orders</a></li>
                     <li><a href="{{ url('/products/order') }}">New Order</a></li>
 					@endif
 				@endif	
